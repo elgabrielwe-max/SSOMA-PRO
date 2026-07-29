@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SUPERVISOR
+  OPERADOR
+  CONSULTA
+}
+
+enum RecordStatus {
+  ABIERTO
+  REVISION
+  CERRADO
+  CANCELADO
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CONSULTA)
+  createdAt DateTime @default(now())
+}
+
+model SafetyRecord {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  type        String
+  area        String
+  description String
+  status      RecordStatus @default(ABIERTO)
+  responsible String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Training {
+  id          String   @id @default(cuid())
+  title       String
+  area        String
+  date        DateTime
+  passingMark Int      @default(16)
+  createdAt   DateTime @default(now())
+}
